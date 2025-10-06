@@ -6,12 +6,13 @@ import { fetchNotes } from "@/lib/api";
 interface PaginationProps {
   currentPage: number;
   onPageChange: (page: number) => void;
+  tag?: string;
 }
 
-const Pagination = ({ currentPage, onPageChange }: PaginationProps) => {
+const Pagination = ({ currentPage, onPageChange, tag }: PaginationProps) => {
   const { data, isSuccess } = useQuery({
-    queryKey: ["notes"],
-    queryFn: () => fetchNotes({ page: 1, perPage: 12 }),
+    queryKey: ["notes", tag],
+    queryFn: () => fetchNotes({ page: 1, perPage: 12, tag }),
   });
 
   const totalPages = data?.totalPages ?? 0;

@@ -1,21 +1,30 @@
+"use client";
+
 import { useEffect } from "react";
 import { createPortal } from "react-dom";
+import { useRouter } from "next/navigation";
 import css from "./Modal.module.css";
-import NoteForm from "@/components/NoteForm/NoteForm";
 
-interface ModalProps {
+type ModalProps = {
+  children: React.ReactNode;
   onClose: () => void;
-}
+};
 
-const Modal = ({ onClose }: ModalProps) => {
+const Modal = ({ children, onClose }: ModalProps) => {
+  const router = useRouter();
   const modalContainer = document.createElement("div");
+
+  const close = () => {
+    onClose();
+    router.back();
+  };
 
   useEffect(() => {
     document.body.appendChild(modalContainer);
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        onClose();
+        close();
       }
     };
 
@@ -25,11 +34,11 @@ const Modal = ({ onClose }: ModalProps) => {
       document.removeEventListener("keydown", handleKeyDown);
       document.body.removeChild(modalContainer);
     };
-  }, [modalContainer, onClose]);
+  }, [modalContainer]);
 
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
     if (e.target === e.currentTarget) {
-      onClose();
+      close();
     }
   };
 
@@ -40,9 +49,7 @@ const Modal = ({ onClose }: ModalProps) => {
       aria-modal="true"
       onClick={handleBackdropClick}
     >
-      <div className={css.modal}>
-        <NoteForm onClose={onClose} />
-      </div>
+      <div className={css.modal}>{children}</div>
     </div>,
     modalContainer
   );

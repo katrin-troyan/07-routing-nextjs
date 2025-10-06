@@ -24,7 +24,7 @@ const NotePreview = () => {
   if (error || !note) return <p>Something went wrong.</p>;
 
   return (
-    <Modal>
+    <Modal onClose={() => {}}>
       <div className={css.container}>
         <div className={css.item}>
           <div className={css.header}>
